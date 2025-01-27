@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { FindOneOptions, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { UsersEntity } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -14,22 +16,27 @@ export class UsersService {
     return this.usersRepository.find({ select: ['id', 'firstName', 'lastName', 'email'] });
   }
 
-  async findOrFail(options: FindOneOptions<UsersEntity> = {}): Promise<UsersEntity> {
+  async findOrFail(id: string): Promise<UsersEntity> {
     try {
-      return await this.usersRepository.findOneOrFail(options);
+      return await this.usersRepository.findOneOrFail({ where: { id } });
     } catch (error) {
       throw new NotFoundException(error.message);
     }
   }
 
-  async update(id: string, data: Partial<UsersEntity>): Promise<UsersEntity> {
-    const user = await this.findOrFail({ where: { id } });
+  async store(data: CreateUserDto) {
+    const user = await this.usersRepository.create(data);
+    return this.usersRepository.save(user);
+  }
+
+  async update(id: string, data: UpdateUserDto){
+    const user = await this.findOrFail(id);
     this.usersRepository.merge(user, data);
     return this.usersRepository.save(user);
   }
 
   async destroy(id: string) {
-    await this.findOrFail({ where: { id } });
+    await this.findOrFail(id);
     this.usersRepository.softDelete(id);
   }
 }
