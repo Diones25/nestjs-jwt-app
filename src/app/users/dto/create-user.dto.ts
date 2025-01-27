@@ -13,7 +13,7 @@ export class CreateUserDto {
   email: string;
 
   @IsNotEmpty({ message: 'password não deve estar vazio' })
-  @Matches(regexHelper.password)
+  @Matches(regexHelper.password, { message: 'A senha deve conter letras maiúscula, minúscula, números e caracteres especiais' })
   password: string;
 }
 
