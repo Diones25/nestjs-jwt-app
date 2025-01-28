@@ -1,5 +1,4 @@
 import { IsEmail, IsNotEmpty, Matches } from "class-validator";
-import { regexHelper } from "src/helpers/regex.helper";
 
 export class CreateUserDto {
   @IsNotEmpty({ message: 'firstName não deve estar vazio' })
@@ -13,7 +12,7 @@ export class CreateUserDto {
   email: string;
 
   @IsNotEmpty({ message: 'password não deve estar vazio' })
-  @Matches(regexHelper.password, { message: 'A senha deve conter letras maiúscula, minúscula, números e caracteres especiais' })
+  @Matches(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/, { message: 'A senha deve conter letras maiúscula, minúscula, números e caracteres especiais' })
   password: string;
 }
 
