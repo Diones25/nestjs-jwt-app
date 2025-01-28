@@ -9,5 +9,9 @@
   "coverageDirectory": "./coverage",
   "collectCoverageFrom": [
     "**/*.(t|j)s"
+  ],
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "/src/app/users/users.module.ts" 
   ]
 }
