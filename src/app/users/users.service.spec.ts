@@ -6,6 +6,7 @@ import { NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { hashSync, compareSync } from 'bcrypt';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -153,6 +154,17 @@ describe('UsersService', () => {
 
       await expect(service.destroy(id)).rejects.toThrow(NotFoundException);
       expect(service.findOrFail).toHaveBeenCalledWith(id);
+    });
+  });
+
+  describe('hasPassword', () => {
+    it('deve hashear a senha antes de salvar', async () => {
+      const user = new UsersEntity();
+      user.password = 'plainPassword';
+
+      user.hasPassword();
+
+      expect(compareSync('plainPassword', user.password)).toBe(true);
     });
   });
 });
