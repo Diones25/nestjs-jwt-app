@@ -24,6 +24,16 @@ export class UsersService {
     }
   }
 
+  async findByEmail(email: string){
+    try {
+      return await this.usersRepository.findOne({
+        where: { email }
+      });
+    } catch (error) {
+      throw new NotFoundException(error.message);
+    }
+  }
+
   async store(data: CreateUserDto) {
     const user = await this.usersRepository.create(data);
     return this.usersRepository.save(user);

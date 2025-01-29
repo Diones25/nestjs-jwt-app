@@ -17,9 +17,9 @@ export class AuthService {
   }
   
   async validateUser(email: string, password: string): Promise<any> {
-    let user: UsersEntity;
+    let user;
     try {
-      user = await this.userService.findOrFail(email);
+      user = await this.userService.findByEmail(email);
     } catch (error) {
       return null;
     }
